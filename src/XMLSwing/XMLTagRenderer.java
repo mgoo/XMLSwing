@@ -17,6 +17,12 @@ import XMLReader.XMLTag;
 
 public class XMLTagRenderer {
 	
+	/**
+	 * This is the method that all external programs should call
+	 * combines the name of the swing tag and the corresponding class object
+	 * @param tag
+	 * @return
+	 */
 	public static JComponent render(XMLTag tag){
 		JComponent obj = null;
 		switch (tag.getName()){
@@ -41,6 +47,12 @@ public class XMLTagRenderer {
 		return obj;
 	}
 	
+	/**
+	 * creates a object that extends a JComponent with the class object you pass it
+	 * @param tag
+	 * @param type
+	 * @return
+	 */
 	private static JComponent renderJComponent(XMLTag tag, Class<? extends JComponent> type){
 		try {
 			Constructor<? extends JComponent> con = type.getConstructor();

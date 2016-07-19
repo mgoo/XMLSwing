@@ -13,6 +13,9 @@ import XMLSwing.XMLTagRenderer;
 
 public class MainTest {
 
+	/**
+	 * Just a class for testing the liburay while in development
+	 */
 	public MainTest(){
 		XMLReader reader = new XMLReader();
 		try {

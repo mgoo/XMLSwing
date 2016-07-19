@@ -12,6 +12,13 @@ import XMLReader.XMLAttribute;
 
 public class XMLAttributeRenderer {
 	
+	/**
+	 * This is the only method that should be called from outside
+	 * combines the swing attribute to the name of the attribute in XML
+	 * @param obj
+	 * @param attr
+	 * @return
+	 */
 	public static JComponent renderAttribute(JComponent obj, XMLAttribute attr){
 		try {
 			switch (attr.getName()){
@@ -43,6 +50,7 @@ public class XMLAttributeRenderer {
 		}
 		return obj;
 	}
+	
 	private static JComponent name(JComponent obj, XMLAttribute attr){
 		obj.setName(attr.getValue());
 		return obj;

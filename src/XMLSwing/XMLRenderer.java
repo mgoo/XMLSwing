@@ -14,6 +14,12 @@ public class XMLRenderer {
 		this.cursor = cursor;
 	}
 	
+	/**
+	 * Will handle the nesting of the swing objects
+	 * and will call the render functions rather than them being called individually
+	 * @param parentFrame
+	 * @return
+	 */
 	public JFrame render(JFrame parentFrame){
 		Stack<XMLTag> tags = this.cursor.getTags();
 		while(!tags.isEmpty()){
