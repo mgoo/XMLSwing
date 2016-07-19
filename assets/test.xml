@@ -1,0 +1,9 @@
+<panel width="100px" height="100px">
+	<innerTag attr1="50">
+	</innerTag>
+</panel>
+<panel att="20"
+	att2="40"
+	att3="50" />
+<panel height=10>
+</panel>
