@@ -25,17 +25,9 @@ public class MainTest {
 		try {
 			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
 			c.loadXML();
-			/*XMLRenderer XMLR = new XMLRenderer(c);
-			XMLR.render(c);*/
-			JFrame frame = (JFrame) XMLTagRenderer.render(c.getFrame());
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			List<XMLTag> tags = c.getTags();
-			tags.remove(c.getFrame());
-			for (XMLTag tag : tags){
-				frame.getContentPane().add(XMLTagRenderer.render(tag));
-				Debug.print(tag.getName());
-			}
-	        frame.setVisible(true);
+			XMLRenderer newRenderer = new XMLRenderer(c);
+			newRenderer.render();
+			newRenderer.show();
 		} catch (IOException e) {e.printStackTrace();}
 
 	}
