@@ -25,6 +25,7 @@ public class XMLTag {
 	public void addAttribute(XMLAttribute attr){this.attributes.add(attr);}
 	public void setParent(XMLTag parent){this.parent = parent;/*parent.addChild(this);*/}
 	public void addChild(XMLTag child){this.childeren.add(child);/*child.setParent(this);*/}
+	public boolean hasChilderen(){return !this.childeren.isEmpty();}
 	
 	public XMLTag(String data){
 		

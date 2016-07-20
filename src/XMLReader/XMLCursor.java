@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
+import javax.swing.JFrame;
+
 import Debug.Debug;
 
 public class XMLCursor {
 	private Scanner fileReader;
 	private List<XMLTag> tags = new ArrayList<XMLTag>();
+	private XMLTag frame;
+		
 	public List<XMLTag> getTags(){return this.tags;}
+	public XMLTag getFrame(){return this.frame;}
 
 	public XMLCursor(Scanner br){
 		br.useDelimiter(">[.\\n\\r\\s]{0,}<");
@@ -36,13 +41,15 @@ public class XMLCursor {
 				tags.get(tags.size()-1).close();
 			}
 		}
+		this.frame = this.findFrame();
+		this.tags.remove(this.frame);
 	}
 
 	public XMLTag nextTag() throws IOException{
 		return tags.get(1);
 	}
 
-	public XMLTag getFrame(){
+	public XMLTag findFrame(){
 		for (XMLTag tag : tags){
 			if (tag.getName().equals("JFrame")){
 				return tag;
