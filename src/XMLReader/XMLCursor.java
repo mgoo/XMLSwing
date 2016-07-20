@@ -44,7 +44,9 @@ public class XMLCursor {
 
 	public XMLTag getFrame(){
 		for (XMLTag tag : tags){
-			if (tag.getName().equals("JFrame"))return tag;
+			if (tag.getName().equals("JFrame")){
+				return tag;
+			}
 		}
 		return null;
 	}

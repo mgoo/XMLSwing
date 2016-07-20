@@ -1,4 +1,6 @@
-<JFrame width=200 height=200>
+<JFrame width=400 height=400>
 	<JLabel text=Hello height=10 width=10>
 	</JLabel>
+	<JTextArea setRows=1 setColumns=5 text=sample>
+	</JTextArea>
 </JFrame>

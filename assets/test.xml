@@ -1,9 +1,6 @@
-<panel width="100px" height="100px">
-	<innerTag attr1="50">
-	</innerTag>
-</panel>
-<panel att="20"
-	att2="40"
-	att3="50" />
-<panel height=10>
-</panel>
+<JFrame width=400 height=400>
+	<JLabel text=Hello height=10 width=10>
+	</JLabel>
+	<JTextField height=20 width=50 setColumns=5 text=sample>
+	</JTextField>
+</JFrame>
