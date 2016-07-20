@@ -1,5 +1,6 @@
 package XMLSwing;
 
+import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -11,7 +12,7 @@ import Debug.Debug;
 import XMLReader.XMLAttribute;
 
 public class XMLAttributeRenderer {
-	
+
 	/**
 	 * This is the only method that should be called from outside
 	 * combines the swing attribute to the name of the attribute in XML
@@ -19,7 +20,7 @@ public class XMLAttributeRenderer {
 	 * @param attr
 	 * @return
 	 */
-	public static JComponent renderAttribute(JComponent obj, XMLAttribute attr){
+	public static Component renderAttribute(Component obj, XMLAttribute attr){
 		try {
 			switch (attr.getName()){
 			case "name":
@@ -44,36 +45,38 @@ public class XMLAttributeRenderer {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
+			Debug.print("This Attribute does not extsit");
+			Debug.print(attr.getName());
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
 		return obj;
 	}
-	
-	private static JComponent name(JComponent obj, XMLAttribute attr){
+
+	private static Component name(Component obj, XMLAttribute attr){
 		obj.setName(attr.getValue());
 		return obj;
 	}
-	
-	private static JComponent width(JComponent obj, XMLAttribute attr){
+
+	private static Component width(Component obj, XMLAttribute attr){
 		int newWidth = Integer.parseInt(attr.getValue());
 		int height = obj.getHeight();
 		obj.setSize(newWidth, height);
 		return obj;
 	}
-	
-	private static JComponent height(JComponent obj, XMLAttribute attr){
+
+	private static Component height(Component obj, XMLAttribute attr){
 		int newHeight = Integer.parseInt(attr.getValue());
 		int width = obj.getWidth();
 		obj.setSize(width, newHeight);
 		return obj;
 	}
-	
-	private static JComponent text(JComponent obj, XMLAttribute attr) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		Class<?> type = obj.getClass();		
+
+	private static Component text(Component obj, XMLAttribute attr) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Class<?> type = obj.getClass();
 		Method textSetter = type.getMethod("setText", String.class);
-		textSetter.invoke(obj, attr.getValue());		
+		textSetter.invoke(obj, attr.getValue());
 		return obj;
 	}
 

@@ -1,6 +1,8 @@
 package XMLReader;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -8,36 +10,43 @@ import Debug.Debug;
 
 public class XMLCursor {
 	private Scanner fileReader;
-	private Stack<XMLTag> tags = new Stack<XMLTag>();
-	public Stack<XMLTag> getTags(){return this.tags;}
+	private List<XMLTag> tags = new ArrayList<XMLTag>();
+	public List<XMLTag> getTags(){return this.tags;}
 
 	public XMLCursor(Scanner br){
 		br.useDelimiter(">[.\\n\\r\\s]{0,}<");
 		this.fileReader = br;
 	}
-	
+
 	public void loadXML(){
-		while(fileReader.hasNext()){	
+		while(fileReader.hasNext()){
 			String line = fileReader.next();
 			if (line.startsWith("<"))line = line.substring(1);
-			if (line.endsWith(">"))line = line.substring(0, line.length() - 1);			
+			if (line.endsWith(">"))line = line.substring(0, line.length() - 1);
 			if(tags.isEmpty()){
-				tags.push(XMLTag.newXMLTag(line, null));
+				tags.add(XMLTag.newXMLTag(line, null));
 			} else if(line.matches("\\/[a-zA-Z]{1,}")){
-				tags.peek().close();
+				tags.get(tags.size()-1).close();
 			} else {
 				int count;
 				for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
-				tags.push(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
-			}			
+				tags.add(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
+			}
 			if (line.endsWith("/")){
-				tags.peek().close();
+				tags.get(tags.size()-1).close();
 			}
 		}
 	}
 
-	public XMLTag nextTag() throws IOException{			
-		return tags.get(0);
+	public XMLTag nextTag() throws IOException{
+		return tags.get(1);
+	}
+
+	public XMLTag getFrame(){
+		for (XMLTag tag : tags){
+			if (tag.getName().equals("JFrame"))return tag;
+		}
+		return null;
 	}
 
 	public String nextAttribute(){

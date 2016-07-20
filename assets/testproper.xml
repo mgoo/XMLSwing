@@ -1,2 +1,4 @@
-<JLabel text=Hello height=100 width=100>
-</JLabel>
+<JFrame width=200 height=200>
+	<JLabel text=Hello height=10 width=10>
+	</JLabel>
+</JFrame>
