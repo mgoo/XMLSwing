@@ -35,8 +35,14 @@ public class XMLAttributeRenderer {
 			case "text":
 				obj = XMLAttributeRenderer.text(obj, attr);
 				break;
+			case "setColumns":
+				obj = XMLAttributeRenderer.setColumns(obj, attr);
+				break;
+			case "setRows":
+				obj = XMLAttributeRenderer.setRows(obj, attr);
+				break;
 			default:
-					Debug.print(attr.getName() + "This attribute was not found");
+					Debug.print(attr.getName() + ": This attribute was not found");
 			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
@@ -77,6 +83,20 @@ public class XMLAttributeRenderer {
 		Class<?> type = obj.getClass();
 		Method textSetter = type.getMethod("setText", String.class);
 		textSetter.invoke(obj, attr.getValue());
+		return obj;
+	}
+
+	private static Component setColumns(Component obj, XMLAttribute attr) throws NoSuchMethodException, SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Class<?> type = obj.getClass();
+		Method attMethod = type.getMethod("setColumns", Integer.TYPE);
+		attMethod.invoke(obj, Integer.parseInt(attr.getValue()));
+		return obj;
+	}
+
+ 	private static Component setRows(Component obj, XMLAttribute attr) throws NoSuchMethodException, SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Class<?> type = obj.getClass();
+		Method attMethod = type.getMethod("setRows", Integer.TYPE);
+		attMethod.invoke(obj, Integer.parseInt(attr.getValue()));
 		return obj;
 	}
 
