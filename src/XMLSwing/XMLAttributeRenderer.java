@@ -23,53 +23,45 @@ public class XMLAttributeRenderer {
 	 * @return
 	 */
 	public static Component renderAttribute(Component obj, XMLAttribute attr){
-		try{
-			XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
-			Debug.print("Auto rendered "+attr.getName());
-		} catch (NoSuchMethodException e){		
-			try {
-				switch (attr.getName()){ //if it doesnt work try this
-				case "width":
-					obj = XMLAttributeRenderer.width(obj, attr);
-					break;
-				case "height":
-					obj = XMLAttributeRenderer.height(obj, attr);
-					break;
-				case "layout":
-					obj = XMLAttributeRenderer.layout(obj, attr);
-					break;
-				default:
-						Debug.print(attr.getName() + ": This attribute was not found");
-				}
-				Debug.print("Manually rendered " + attr.getName());
-			} catch (IllegalArgumentException e1) {
-				e1.printStackTrace();
-			} catch (SecurityException e1) {
-				e1.printStackTrace();
-			} catch (InstantiationException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IllegalAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		try {
+			switch (attr.getName()){ //if it doesnt work try this
+			case "width":
+				obj = XMLAttributeRenderer.width(obj, attr);
+				break;
+			case "height":
+				obj = XMLAttributeRenderer.height(obj, attr);
+				break;
+			case "layout":
+				obj = XMLAttributeRenderer.layout(obj, attr);
+				break;
+			case "setRows":
+			case "setColumns":
+				obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
+				break;
+			default:
+				Debug.print(attr.getName() + ": This attribute was not found");
+				XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
+				Debug.print("Auto rendered "+attr.getName());
 			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			Debug.print("Manually rendered " + attr.getName());
+		} catch (IllegalArgumentException e1) {
+			e1.printStackTrace();
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
+		} catch (InstantiationException e1) {
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
+			e1.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			e1.printStackTrace();
 		}
 		return obj;
 	}
-	
+
 	private static Component autoRenderAttribute(Component obj, XMLAttribute attr)throws SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
 		Class<?> type = obj.getClass();
 		Method attMethod;
@@ -80,11 +72,11 @@ public class XMLAttributeRenderer {
 			try {
 				attMethod = type.getMethod(attr.getName(), Integer.TYPE);
 				attMethod.invoke(obj, Integer.parseInt(attr.getValue()));
-			} catch (NoSuchMethodException e1) {			
+			} catch (NoSuchMethodException e1) {
 				attMethod = type.getMethod(attr.getName(), String.class);
-				attMethod.invoke(obj, attr.getValue());					
+				attMethod.invoke(obj, attr.getValue());
 			}
-		}		
+		}
 		return obj;
 	}
 
@@ -101,10 +93,32 @@ public class XMLAttributeRenderer {
 		obj.setSize(width, newHeight);
 		return obj;
 	}
-	
+
 	private static Component layout(Component obj, XMLAttribute attr) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		Class<?> layoutClass = Class.forName("java.awt." + attr.getValue());
 		((JPanel)obj).setLayout((LayoutManager) layoutClass.newInstance());
+		return obj;
+	}
+
+	private static Component setLayoutAttribute(Component obj, XMLAttribute attr) throws SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
+		if (obj.getClass() == JPanel.class){ //sets the rows for a grid layout
+			LayoutManager layout = ((JPanel)obj).getLayout();
+			Debug.print(layout.toString());
+			Method method;
+			try {
+				method = layout.getClass().getMethod(attr.getName(), Integer.TYPE);
+				method.invoke(layout, Integer.parseInt(attr.getValue()));
+			} catch (NoSuchMethodException e) {
+				try {
+					method = layout.getClass().getMethod(attr.getName(), String.class);
+					method.invoke(layout, attr.getValue());
+				} catch (NoSuchMethodException e1) {
+					method = layout.getClass().getMethod(attr.getName());
+					method.invoke(layout);
+				}
+			}
+
+		}
 		return obj;
 	}
 }
