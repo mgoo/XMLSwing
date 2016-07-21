@@ -1,7 +1,11 @@
 package XMLSwing;
 
 import java.awt.Container;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.swing.JFrame;
+import javax.swing.JTabbedPane;
 
 import Debug.Debug;
 import XMLReader.XMLCursor;
@@ -10,7 +14,10 @@ import XMLReader.XMLTag;
 public class XMLRenderer {
 	private XMLCursor cursor;
 	private JFrame mainFrame;
+	private Map<String, Container> elements = new HashMap<String, Container>();
 	
+	public void addElement(Container element){this.elements.put(element.getName(), element);}
+	public Container findElementByName(String name){return this.elements.get(name);}	
 	public void show(){this.mainFrame.setVisible(true);}
 	public void hide(){this.mainFrame.setVisible(false);}
 
@@ -36,7 +43,12 @@ public class XMLRenderer {
 		for(XMLTag child : parent.getChilderen()){
 			Container childComponent = (Container) XMLTagRenderer.render(child);
 			if (child.hasChilderen())childComponent = this.addChilderen(child, childComponent);
-			parentComponent.add(childComponent);
+			if (parentComponent.getClass().equals(JTabbedPane.class)){ //if statments for special adds
+				((JTabbedPane)parentComponent).addTab(childComponent.getName(), childComponent);
+				Debug.print("added tab");
+			} else {
+				parentComponent.add(childComponent);
+			}
 			
 		}
 		return parentComponent;
