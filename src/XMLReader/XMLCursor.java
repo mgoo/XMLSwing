@@ -31,7 +31,11 @@ public class XMLCursor {
 			if(tags.isEmpty()){
 				tags.add(XMLTag.newXMLTag(line, null));
 			} else if(line.matches("\\/[a-zA-Z]{1,}")){
-				tags.get(tags.size()-1).close();
+				int count;
+				for (count = tags.size()-1; count >= 0 && !tags.get(count).isOpen() ; count--){}
+				try{
+					tags.get(count).close();
+				} catch (ArrayIndexOutOfBoundsException e){Debug.print("failed to close: " + line);}
 			} else {
 				int count;
 				for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
@@ -43,6 +47,11 @@ public class XMLCursor {
 		}
 		this.frame = this.findFrame();
 		this.tags.remove(this.frame);
+		for (XMLTag tag : tags){
+			if (tag.isOpen()){
+				Debug.print("*** ERROR in closing " + tag.getName() + " ***");
+			}
+		}
 	}
 
 	public XMLTag nextTag() throws IOException{
