@@ -24,7 +24,7 @@ public class XMLAttributeRenderer {
 	 */
 	public static Component renderAttribute(Component obj, XMLAttribute attr){
 		try {
-			switch (attr.getName()){ //if it doesnt work try this
+			switch (attr.getName()){
 			case "width":
 				obj = XMLAttributeRenderer.width(obj, attr);
 				break;
@@ -38,7 +38,7 @@ public class XMLAttributeRenderer {
 			case "setColumns":
 				obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
 				break;
-			default:
+			default: //if there is no special render function try to render it automattically
 				Debug.print(attr.getName() + ": This attribute was not found");
 				XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
 				Debug.print("Auto rendered "+attr.getName());
