@@ -2,7 +2,7 @@
 This is a java liburary that converts XML code to swing code
 
 ##TODO
-1. go through the swing attributes to make sure it can add them all
+1. go through the swing attributes to make sure it acctually does add all of them 
 3. make the XML Reader more robust ie can handle quotes and spaces properly
 
 ##Features
