@@ -34,8 +34,8 @@ public class XMLAttributeRenderer {
 			case "layout":
 				obj = XMLAttributeRenderer.layout(obj, attr);
 				break;
-			case "setRows":
-			case "setColumns":
+			case "setLayoutRows":
+			case "setLayoutColumns":
 				obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
 				break;
 			default: //if there is no special render function try to render it automattically
