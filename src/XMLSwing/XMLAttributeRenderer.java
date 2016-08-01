@@ -44,7 +44,7 @@ public class XMLAttributeRenderer {
 				XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
 				Debug.print("Auto rendered "+attr.getName());
 			}
-			Debug.print("Manually rendered " + attr.getName());
+			//Debug.print("Manually rendered " + attr.getName());
 		} catch (IllegalArgumentException e1) {
 			e1.printStackTrace();
 		} catch (SecurityException e1) {
@@ -65,7 +65,7 @@ public class XMLAttributeRenderer {
 
 	private static Component autoRenderAttribute(Component obj, XMLAttribute attr)throws SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
 		Class<?> type = obj.getClass();
-		XMLAttributeRenderer.invokeMethod(type, attr.getName(), attr.getValue());
+		XMLAttributeRenderer.invokeMethod(type, obj, attr.getName(), attr.getValue());
 		return obj;
 	}
 
@@ -94,28 +94,33 @@ public class XMLAttributeRenderer {
 		if (obj.getClass() == JPanel.class){ //sets the rows for a grid layout
 			LayoutManager layout = ((JPanel)obj).getLayout();
 			Debug.print(layout.toString());
-			XMLAttributeRenderer.invokeMethod(layout.getClass(), attr.getName().split("_")[1], attr.getValue());			
+			XMLAttributeRenderer.invokeMethod(layout.getClass(), layout, attr.getName().split("_")[1], attr.getValue());			
 		}
 		return obj;
 	}
 	
-	private static boolean invokeMethod(Class classObj, String name, String param) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+	private static boolean invokeMethod(Class<?> classObj, Object obj, String name, String param) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
 		Method method;
 		try {
 			method = classObj.getMethod(name, Integer.TYPE);
-			method.invoke(classObj, Integer.parseInt(param));
+			method.invoke(obj, Integer.parseInt(param));
 		} catch (NoSuchMethodException e) {
 			try {
 				method = classObj.getMethod(name, String.class);
-				method.invoke(classObj, param);
+				method.invoke(obj, param);
 			} catch (NoSuchMethodException e1) {
 				try{
 					method = classObj.getMethod(name);
-					method.invoke(classObj);
+					method.invoke(obj);
 				} catch (NoSuchMethodException e2){
+					try{
 					method = classObj.getMethod(name, Color.class);
-					method.invoke(classObj, Color.decode(param));
+					method.invoke(obj, Color.decode(param));
 					Debug.print("Rendered Color: " + param);
+					} catch (NoSuchMethodException e3){						
+						method = classObj.getMethod(name, Boolean.TYPE);
+						method.invoke(obj, Boolean.parseBoolean(param));
+					}
 				}
 			}
 		}

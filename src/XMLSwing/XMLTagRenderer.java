@@ -22,14 +22,18 @@ public class XMLTagRenderer {
 	public static Component render(XMLTag tag, Map<String, Container> elements){
 		try {
 			Component obj = null;
-			Class<? extends Component> type;
+			Class<? extends Component> type = null;
 			try {
-				type = (Class<? extends Component>) Class.forName("javax.swing." + tag.getName());
-				obj = XMLTagRenderer.renderComponet(tag, type);
-			} catch (ClassNotFoundException e) {
-				Debug.print("the class " + tag.getName() + " was not found");
-				e.printStackTrace();
+				type = (Class<? extends Component>) Class.forName("javax.swing." + tag.getName());				
+			} catch (ClassNotFoundException e) {				
+				try {
+					type = (Class<? extends Component>) Class.forName(tag.getName());
+				} catch (ClassNotFoundException e1) {
+					Debug.print("the class " + tag.getName() + " was not found");
+					e.printStackTrace();
+				}
 			}
+			obj = XMLTagRenderer.renderComponet(tag, type);
 			elements.put(obj.getName(), (Container) obj);
 			return obj;
 		} catch (NoSuchMethodException e) {
