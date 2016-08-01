@@ -30,13 +30,14 @@ public class XMLCursor {
 			if (line.endsWith(">"))line = line.substring(0, line.length() - 1);
 			if(tags.isEmpty()){
 				tags.add(XMLTag.newXMLTag(line, null));
-			} else if(line.matches("\\/[a-zA-Z]{1,}")){
+			} else if(line.matches("\\/[a-zA-Z]{1,}") || line.startsWith("/")){
 				int count;
 				for (count = tags.size()-1; count >= 0 && !tags.get(count).isOpen() ; count--){}
 				try{
 					tags.get(count).close();
 				} catch (ArrayIndexOutOfBoundsException e){Debug.print("failed to close: " + line);}
 			} else {
+				Debug.print(line);
 				int count;
 				for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
 				tags.add(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
