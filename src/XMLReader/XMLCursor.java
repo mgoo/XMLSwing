@@ -13,10 +13,10 @@ import Debug.Debug;
 public class XMLCursor {
 	private Scanner fileReader;
 	private List<XMLTag> tags = new ArrayList<XMLTag>();
-	private XMLTag frame;
+	private XMLTag root;
 		
 	public List<XMLTag> getTags(){return this.tags;}
-	public XMLTag getFrame(){return this.frame;}
+	public XMLTag getFrame(){return this.root;}
 
 	public XMLCursor(Scanner br){
 		br.useDelimiter(">[.\\n\\r\\s]{0,}<");
@@ -37,7 +37,6 @@ public class XMLCursor {
 					tags.get(count).close();
 				} catch (ArrayIndexOutOfBoundsException e){Debug.print("failed to close: " + line);}
 			} else {
-				Debug.print(line);
 				int count;
 				for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
 				tags.add(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
@@ -46,8 +45,8 @@ public class XMLCursor {
 				tags.get(tags.size()-1).close();
 			}
 		}
-		this.frame = this.findFrame();
-		this.tags.remove(this.frame);
+		this.root = this.findRoot();
+		this.tags.remove(this.root);
 		for (XMLTag tag : tags){
 			if (tag.isOpen()){
 				Debug.print("*** ERROR in closing " + tag.getName() + " ***");
@@ -59,13 +58,14 @@ public class XMLCursor {
 		return tags.get(1);
 	}
 
-	public XMLTag findFrame(){
-		for (XMLTag tag : tags){
+	public XMLTag findRoot(){
+		return tags.get(0);
+		/*for (XMLTag tag : tags){
 			if (tag.getName().equals("JFrame")){
 				return tag;
 			}
 		}
-		return null;
+		return null;*/
 	}
 
 	public String nextAttribute(){

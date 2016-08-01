@@ -17,8 +17,7 @@
 				setText=Hello 
 				height=10 
 				width=10
-				>
-			</JLabel>
+				/>
 			<JTextArea 
 				setRows=1 
 				setColumns=5 

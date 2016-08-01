@@ -21,7 +21,6 @@ public class MainTest {
 	public MainTest(){
 		XMLReader reader = new XMLReader();
 		try {
-			Debug.print("hi");
 			WebLookAndFeel.install();
 			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
 			c.loadXML();

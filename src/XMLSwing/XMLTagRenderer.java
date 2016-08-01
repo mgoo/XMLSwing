@@ -19,6 +19,7 @@ public class XMLTagRenderer {
 	 * @param tag
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public static Component render(XMLTag tag, Map<String, Container> elements){
 		try {
 			Component obj = null;
