@@ -1,5 +1,6 @@
 package XMLSwing;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.LayoutManager;
 import java.lang.reflect.InvocationTargetException;
@@ -34,11 +35,11 @@ public class XMLAttributeRenderer {
 			case "layout":
 				obj = XMLAttributeRenderer.layout(obj, attr);
 				break;
-			case "setLayoutRows":
-			case "setLayoutColumns":
-				obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
-				break;
 			default: //if there is no special render function try to render it automattically
+				if (attr.getName().matches("layout_([A-Za-z]{0,})")){
+					obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
+					break;
+				}
 				Debug.print(attr.getName() + ": This attribute was not found");
 				XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
 				Debug.print("Auto rendered "+attr.getName());
@@ -73,8 +74,13 @@ public class XMLAttributeRenderer {
 				attMethod = type.getMethod(attr.getName(), Integer.TYPE);
 				attMethod.invoke(obj, Integer.parseInt(attr.getValue()));
 			} catch (NoSuchMethodException e1) {
+				try{
 				attMethod = type.getMethod(attr.getName(), String.class);
 				attMethod.invoke(obj, attr.getValue());
+				} catch (NoSuchMethodException e2){
+					attMethod = type.getMethod(attr.getName(), Color.class);
+					attMethod.invoke(obj, Color.decode(attr.getValue()));
+				}
 			}
 		}
 		return obj;
@@ -101,19 +107,20 @@ public class XMLAttributeRenderer {
 	}
 
 	private static Component setLayoutAttribute(Component obj, XMLAttribute attr) throws SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
+
 		if (obj.getClass() == JPanel.class){ //sets the rows for a grid layout
 			LayoutManager layout = ((JPanel)obj).getLayout();
 			Debug.print(layout.toString());
 			Method method;
 			try {
-				method = layout.getClass().getMethod(attr.getName(), Integer.TYPE);
+				method = layout.getClass().getMethod(attr.getName().split("_")[1], Integer.TYPE);
 				method.invoke(layout, Integer.parseInt(attr.getValue()));
 			} catch (NoSuchMethodException e) {
 				try {
-					method = layout.getClass().getMethod(attr.getName(), String.class);
+					method = layout.getClass().getMethod(attr.getName().split("_")[1], String.class);
 					method.invoke(layout, attr.getValue());
 				} catch (NoSuchMethodException e1) {
-					method = layout.getClass().getMethod(attr.getName());
+					method = layout.getClass().getMethod(attr.getName().split("_")[1]);
 					method.invoke(layout);
 				}
 			}
