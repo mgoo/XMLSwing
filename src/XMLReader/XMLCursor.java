@@ -16,7 +16,7 @@ public class XMLCursor {
 	private XMLTag root;
 		
 	public List<XMLTag> getTags(){return this.tags;}
-	public XMLTag getFrame(){return this.root;}
+	public XMLTag getRoot(){return this.root;}
 
 	public XMLCursor(Scanner br){
 		br.useDelimiter(">[.\\n\\r\\s]{0,}<");

@@ -13,13 +13,13 @@ import XMLReader.XMLTag;
 
 public class XMLRenderer {
 	private XMLCursor cursor;
-	private JFrame mainFrame;
+	private Container root;
 	private Map<String, Container> elements = new HashMap<String, Container>();
 
 	public void addElement(Container element){this.elements.put(element.getName(), element);}
 	public Container findElementByName(String name){return this.elements.get(name);}
-	public void show(){this.mainFrame.setVisible(true);}
-	public void hide(){this.mainFrame.setVisible(false);}
+	public void show(){this.root.setVisible(true);}
+	public void hide(){this.root.setVisible(false);}
 
 	public XMLRenderer(XMLCursor cursor){
 		this.cursor = cursor;
@@ -32,10 +32,12 @@ public class XMLRenderer {
 	 * @return
 	 */
 	public JFrame render(){
-		XMLTag frame = cursor.getFrame();
-		this.mainFrame = (JFrame) XMLTagRenderer.render(frame, elements);
-		this.mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.addChilderen(frame, this.mainFrame);
+		XMLTag rootTag = cursor.getRoot();
+		this.root = (Container) XMLTagRenderer.render(rootTag, elements);
+		if (rootTag.getName().equals("JFrame")){
+			((JFrame)this.root).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		}
+		this.addChilderen(rootTag, this.root);
 		return null;
 	}
 
