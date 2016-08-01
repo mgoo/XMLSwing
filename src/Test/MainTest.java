@@ -2,8 +2,6 @@ package Test;
 
 import java.io.IOException;
 
-import javax.swing.*;
-
 import Debug.Debug;
 import XMLReader.XMLCursor;
 import XMLReader.XMLReader;
@@ -31,5 +29,4 @@ public class MainTest {
 		// TODO Auto-generated method stub
 		new MainTest();
 	}
-
 }
