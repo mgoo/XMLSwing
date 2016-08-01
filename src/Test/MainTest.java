@@ -18,6 +18,7 @@ public class MainTest {
 	public MainTest(){
 		XMLReader reader = new XMLReader();
 		try {
+			Debug.print("hi");
 			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
 			c.loadXML();
 			XMLRenderer newRenderer = new XMLRenderer(c);

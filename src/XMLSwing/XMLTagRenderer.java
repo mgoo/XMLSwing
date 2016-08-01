@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 import Debug.Debug;
 import XMLReader.XMLAttribute;
@@ -18,7 +19,7 @@ public class XMLTagRenderer {
 	 * @param tag
 	 * @return
 	 */
-	public static Component render(XMLTag tag){
+	public static Component render(XMLTag tag, Map<String, Container> elements){
 		try {
 			Component obj = null;
 			Class<? extends Component> type;
@@ -29,6 +30,7 @@ public class XMLTagRenderer {
 				Debug.print("the class " + tag.getName() + " was not found");
 				e.printStackTrace();
 			}
+			elements.put(obj.getName(), (Container) obj);
 			return obj;
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();

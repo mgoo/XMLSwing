@@ -1,5 +1,6 @@
 package XMLSwing;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.LayoutManager;
 import java.lang.reflect.InvocationTargetException;
@@ -34,11 +35,11 @@ public class XMLAttributeRenderer {
 			case "layout":
 				obj = XMLAttributeRenderer.layout(obj, attr);
 				break;
-			case "setRows":
-			case "setColumns":
-				obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
-				break;
 			default: //if there is no special render function try to render it automattically
+				if (attr.getName().matches("layout_([A-Za-z]{0,})")){
+					obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
+					break;
+				}
 				Debug.print(attr.getName() + ": This attribute was not found");
 				XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
 				Debug.print("Auto rendered "+attr.getName());
@@ -64,19 +65,7 @@ public class XMLAttributeRenderer {
 
 	private static Component autoRenderAttribute(Component obj, XMLAttribute attr)throws SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
 		Class<?> type = obj.getClass();
-		Method attMethod;
-		try {
-			attMethod = type.getMethod(attr.getName());
-			attMethod.invoke(obj);
-		} catch (NoSuchMethodException e){
-			try {
-				attMethod = type.getMethod(attr.getName(), Integer.TYPE);
-				attMethod.invoke(obj, Integer.parseInt(attr.getValue()));
-			} catch (NoSuchMethodException e1) {
-				attMethod = type.getMethod(attr.getName(), String.class);
-				attMethod.invoke(obj, attr.getValue());
-			}
-		}
+		XMLAttributeRenderer.invokeMethod(type, attr.getName(), attr.getValue());
 		return obj;
 	}
 
@@ -101,24 +90,35 @@ public class XMLAttributeRenderer {
 	}
 
 	private static Component setLayoutAttribute(Component obj, XMLAttribute attr) throws SecurityException, NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException{
+
 		if (obj.getClass() == JPanel.class){ //sets the rows for a grid layout
 			LayoutManager layout = ((JPanel)obj).getLayout();
 			Debug.print(layout.toString());
-			Method method;
-			try {
-				method = layout.getClass().getMethod(attr.getName(), Integer.TYPE);
-				method.invoke(layout, Integer.parseInt(attr.getValue()));
-			} catch (NoSuchMethodException e) {
-				try {
-					method = layout.getClass().getMethod(attr.getName(), String.class);
-					method.invoke(layout, attr.getValue());
-				} catch (NoSuchMethodException e1) {
-					method = layout.getClass().getMethod(attr.getName());
-					method.invoke(layout);
-				}
-			}
-
+			XMLAttributeRenderer.invokeMethod(layout.getClass(), attr.getName().split("_")[1], attr.getValue());			
 		}
 		return obj;
+	}
+	
+	private static boolean invokeMethod(Class classObj, String name, String param) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+		Method method;
+		try {
+			method = classObj.getMethod(name, Integer.TYPE);
+			method.invoke(classObj, Integer.parseInt(param));
+		} catch (NoSuchMethodException e) {
+			try {
+				method = classObj.getMethod(name, String.class);
+				method.invoke(classObj, param);
+			} catch (NoSuchMethodException e1) {
+				try{
+					method = classObj.getMethod(name);
+					method.invoke(classObj);
+				} catch (NoSuchMethodException e2){
+					method = classObj.getMethod(name, Color.class);
+					method.invoke(classObj, Color.decode(param));
+					Debug.print("Rendered Color: " + param);
+				}
+			}
+		}
+		return true;
 	}
 }
