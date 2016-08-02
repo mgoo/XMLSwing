@@ -19,14 +19,17 @@ import  javax.swing.plaf.*;
 import javax.swing.plaf.synth.SynthLookAndFeel;
 
 public class XMLRenderer {
+	public static final String FRAME_MAXIMISED = "frame_max";
+	public static final String FRAME_CLOSE_EXIT = "frame_close_exit";
+
 	private XMLCursor cursor;
 	private Container root;
 	private Container getRoot(){return this.root;}
+	public XMLTag getRootTag(){return this.cursor.getRoot();}
 	private Map<String, Container> elements = new HashMap<String, Container>();
 
 	public void addElement(Container element){this.elements.put(element.getName(), element);}
 	public Container findElementByName(String name){return this.elements.get(name);}
-	public void show(){this.root.setVisible(true);}
 	public void hide(){this.root.setVisible(false);}
 
 	public XMLRenderer(XMLCursor cursor){
@@ -42,12 +45,30 @@ public class XMLRenderer {
 	public JFrame render(Class<?> applicationClass){
 		XMLTag rootTag = cursor.getRoot();
 		this.root = (Container) XMLTagRenderer.render(rootTag, elements);
-		if (rootTag.getName().equals("JFrame")){
-			((JFrame)this.root).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		}
 		this.addChilderen(rootTag, this.root);
-		this.setLaf(applicationClass);
+		if(this.root.getClass().equals(JFrame.class) && this.cursor.getLaf().size() > 0)this.setLaf(applicationClass);
+
 		return null;
+	}
+
+	public void show(){
+		this.root.setVisible(true);
+	}
+	public void show(String[] args){
+		for (String arg : args){
+			switch (arg) {
+				case XMLRenderer.FRAME_MAXIMISED:
+					((JFrame) this.root).setExtendedState(JFrame.MAXIMIZED_BOTH);
+					break;
+				case XMLRenderer.FRAME_CLOSE_EXIT:
+					((JFrame)this.root).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					break;
+				default:
+					Debug.print("Argument not found: " + arg);
+					break;
+			}
+		}
+		this.show();
 	}
 
 	private Container addChilderen(XMLTag parent, Container parentComponent){

@@ -1,15 +1,11 @@
 package XMLSwing;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.LayoutManager;
+import java.awt.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import Debug.Debug;
 import XMLReader.XMLAttribute;
@@ -26,23 +22,34 @@ public class XMLAttributeRenderer {
 	public static Component renderAttribute(Component obj, XMLAttribute attr){
 		try {
 			switch (attr.getName()){
-			case "width":
-				obj = XMLAttributeRenderer.width(obj, attr);
-				break;
-			case "height":
-				obj = XMLAttributeRenderer.height(obj, attr);
-				break;
-			case "layout":
-				obj = XMLAttributeRenderer.layout(obj, attr);
-				break;
-			default: //if there is no special render function try to render it automattically
-				if (attr.getName().matches("layout_([A-Za-z]{0,})")){
-					obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
+				case "setWidth":
+				case "width":
+					obj = XMLAttributeRenderer.width(obj, attr);
 					break;
-				}
-				Debug.print(attr.getName() + ": This attribute was not found");
-				XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
-				Debug.print("Auto rendered "+attr.getName());
+				case "setHeight":
+				case "height":
+					obj = XMLAttributeRenderer.height(obj, attr);
+					break;
+				case "setMaximumWidth":
+					obj = XMLAttributeRenderer.maxWidth(obj, attr);
+					break;
+				case "setMaximumHeight":
+					obj = XMLAttributeRenderer.maxHeight(obj, attr);
+					break;
+				case "layout":
+					obj = XMLAttributeRenderer.layout(obj, attr);
+					break;
+				case "tabToolTip":
+				case "tabName":
+					break; //dont render attribute
+				default: //if there is no special render function try to render it automattically
+					if (attr.getName().matches("layout_([A-Za-z]{0,})")){
+						obj = XMLAttributeRenderer.setLayoutAttribute(obj, attr);
+						break;
+					}
+					Debug.print(attr.getName() + ": This attribute was not found");
+					XMLAttributeRenderer.autoRenderAttribute(obj, attr); //Try this first
+					Debug.print("Auto rendered "+attr.getName());
 			}
 			//Debug.print("Manually rendered " + attr.getName());
 		} catch (IllegalArgumentException e1) {
@@ -69,6 +76,20 @@ public class XMLAttributeRenderer {
 		return obj;
 	}
 
+	private static Component maxWidth(Component obj, XMLAttribute attr){
+		int newWidth = Integer.parseInt(attr.getValue());
+		int height = (int)(obj.getMaximumSize().getHeight());
+		obj.setMaximumSize(new Dimension(newWidth, height));
+		return obj;
+	}
+
+	private static Component maxHeight(Component obj, XMLAttribute attr){
+		int newHeight = Integer.parseInt(attr.getValue());
+		int width = (int)(obj.getMaximumSize().getWidth());
+		obj.setMaximumSize(new Dimension(width, newHeight));
+		return obj;
+	}
+
 	private static Component width(Component obj, XMLAttribute attr){
 		int newWidth = Integer.parseInt(attr.getValue());
 		int height = obj.getHeight();
@@ -83,9 +104,26 @@ public class XMLAttributeRenderer {
 		return obj;
 	}
 
-	private static Component layout(Component obj, XMLAttribute attr) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		Class<?> layoutClass = Class.forName("java.awt." + attr.getValue());
-		((JPanel)obj).setLayout((LayoutManager) layoutClass.newInstance());
+	private static Component layout(Component obj, XMLAttribute attr) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		Class<?> layoutClass = null;
+		try {
+			layoutClass = Class.forName("java.awt." + attr.getValue());
+		} catch (ClassNotFoundException e) {
+			try {
+				layoutClass = Class.forName("javax.swing." + attr.getValue());
+			} catch (ClassNotFoundException e1) {
+				layoutClass = Class.forName(attr.getValue());
+			}
+		}
+		if(layoutClass.equals(BoxLayout.class)){
+			try {
+				//Does the special things to render the BoxLayout
+				Constructor con = layoutClass.getDeclaredConstructor(Container.class, Integer.TYPE);
+				((JPanel)obj).setLayout((LayoutManager) con.newInstance(obj, BoxLayout.Y_AXIS));
+			} catch (NoSuchMethodException e) {e.printStackTrace();} catch (InvocationTargetException e) {e.printStackTrace();}
+		} else {
+			((JPanel)obj).setLayout((LayoutManager) layoutClass.newInstance());
+		}
 		return obj;
 	}
 

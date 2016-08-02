@@ -22,12 +22,11 @@ public class MainTest {
 		XMLReader reader = new XMLReader();
 		try {
 			//WebLookAndFeel.install();
-			XMLCursor c = reader.openXMLFile("assets/test.xml");
+			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
 			c.loadXML();
 			XMLRenderer newRenderer = new XMLRenderer(c);
 			newRenderer.render(this.getClass());
-			//newRenderer.setLaf();
-			newRenderer.show();
+			newRenderer.show(new String[]{XMLRenderer.FRAME_MAXIMISED, XMLRenderer.FRAME_CLOSE_EXIT});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
