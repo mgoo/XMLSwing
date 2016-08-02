@@ -1,5 +1,5 @@
 <JFrame 
-	width=400 
+	width=400
 	height=400
 	>
 	<JTabbedPane 
@@ -25,7 +25,7 @@
 				>
 			</JTextArea>
 			<JLabel 
-				setText=sample2 
+				setText=sample2
 				setForeground=#FF0000 
 				setBackground=#00FF00 
 				setOpaque=true

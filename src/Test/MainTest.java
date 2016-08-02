@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.swing.JTabbedPane;
 
-import com.alee.laf.WebLookAndFeel;
+//import com.alee.laf.WebLookAndFeel;
 
 import Debug.Debug;
 import XMLReader.XMLCursor;
@@ -21,7 +21,7 @@ public class MainTest {
 	public MainTest(){
 		XMLReader reader = new XMLReader();
 		try {
-			WebLookAndFeel.install();
+			//WebLookAndFeel.install();
 			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
 			c.loadXML();
 			XMLRenderer newRenderer = new XMLRenderer(c);

@@ -1,3 +1,6 @@
 .classpath
 .git
 .settings
+.idea
+out
+XMLSwing.iml
