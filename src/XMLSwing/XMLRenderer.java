@@ -1,15 +1,22 @@
 package XMLSwing;
 
 import java.awt.Container;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 import Debug.Debug;
 import XMLReader.XMLCursor;
 import XMLReader.XMLTag;
+
+import  javax.swing.plaf.*;
+import javax.swing.plaf.synth.SynthLookAndFeel;
 
 public class XMLRenderer {
 	private XMLCursor cursor;
@@ -54,5 +61,22 @@ public class XMLRenderer {
 
 		}
 		return parentComponent;
+	}
+
+	public void setLaf(Class<?> applicatoinClass) {
+		SynthLookAndFeel laf = new SynthLookAndFeel();
+		try {
+			//laf.load(applicatoinClass.getResourceAsStream("assets/laf/default.xml"), applicatoinClass);
+			laf.load(new FileInputStream(new File("assets/laf/default.xml")), applicatoinClass);
+			UIManager.setLookAndFeel(laf);
+			Debug.print("Look and fel set to default");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

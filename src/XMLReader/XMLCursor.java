@@ -38,8 +38,12 @@ public class XMLCursor {
 				} catch (ArrayIndexOutOfBoundsException e){Debug.print("failed to close: " + line);}
 			} else {
 				int count;
-				for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
-				tags.add(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
+				try {
+					for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
+					tags.add(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
+				} catch (ArrayIndexOutOfBoundsException e){
+					tags.add(XMLTag.newXMLTag(line, null));
+				}
 			}
 			if (line.endsWith("/")){
 				tags.get(tags.size()-1).close();
@@ -59,13 +63,17 @@ public class XMLCursor {
 	}
 
 	public XMLTag findRoot(){
-		return tags.get(0);
+		for (XMLTag tag : tags){
+			if (!tag.getName().equals("laf")){
+				return tag;
+			}
+		}
 		/*for (XMLTag tag : tags){
 			if (tag.getName().equals("JFrame")){
 				return tag;
 			}
-		}
-		return null;*/
+		}*/
+		return null;
 	}
 
 	public String nextAttribute(){

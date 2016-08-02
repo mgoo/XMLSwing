@@ -26,12 +26,12 @@ public class MainTest {
 			c.loadXML();
 			XMLRenderer newRenderer = new XMLRenderer(c);
 			newRenderer.render();
+			newRenderer.setLaf(this.getClass());
 			newRenderer.show();
 		} catch (IOException e) {e.printStackTrace();}
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		new MainTest();
 	}
 }
