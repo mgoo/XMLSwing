@@ -21,6 +21,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel;
 public class XMLRenderer {
 	private XMLCursor cursor;
 	private Container root;
+	private Container getRoot(){return this.root;}
 	private Map<String, Container> elements = new HashMap<String, Container>();
 
 	public void addElement(Container element){this.elements.put(element.getName(), element);}
@@ -38,13 +39,14 @@ public class XMLRenderer {
 	 * @param parentFrame
 	 * @return
 	 */
-	public JFrame render(){
+	public JFrame render(Class<?> applicationClass){
 		XMLTag rootTag = cursor.getRoot();
 		this.root = (Container) XMLTagRenderer.render(rootTag, elements);
 		if (rootTag.getName().equals("JFrame")){
 			((JFrame)this.root).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
 		this.addChilderen(rootTag, this.root);
+		this.setLaf(applicationClass);
 		return null;
 	}
 
@@ -63,20 +65,21 @@ public class XMLRenderer {
 		return parentComponent;
 	}
 
-	public void setLaf(Class<?> applicatoinClass) {
+	private void setLaf(Class<?> applicatoinClass) {
 		SynthLookAndFeel laf = new SynthLookAndFeel();
 		try {
-			//laf.load(applicatoinClass.getResourceAsStream("assets/laf/default.xml"), applicatoinClass);
-			laf.load(new FileInputStream(new File("assets/laf/default.xml")), applicatoinClass);
+			for (XMLTag lafTag : this.cursor.getLaf()) {
+				laf.load(new FileInputStream(new File(lafTag.getAttributeByName("file").getValue())), applicatoinClass);
+				Debug.print("Look & Feels: " + lafTag.getAttributeByName("file").getValue());
+			}
 			UIManager.setLookAndFeel(laf);
-			Debug.print("Look and fel set to default");
+			SwingUtilities.updateComponentTreeUI((JFrame)this.root);
 		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
 		}
-
 	}
 }

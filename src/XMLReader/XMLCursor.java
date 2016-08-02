@@ -14,6 +14,8 @@ public class XMLCursor {
 	private Scanner fileReader;
 	private List<XMLTag> tags = new ArrayList<XMLTag>();
 	private XMLTag root;
+	private List<XMLTag> laf = new ArrayList<>();
+	public List<XMLTag> getLaf(){return this.laf;}
 		
 	public List<XMLTag> getTags(){return this.tags;}
 	public XMLTag getRoot(){return this.root;}
@@ -50,16 +52,27 @@ public class XMLCursor {
 			}
 		}
 		this.root = this.findRoot();
+		this.removeLaf();
 		this.tags.remove(this.root);
 		for (XMLTag tag : tags){
 			if (tag.isOpen()){
 				Debug.print("*** ERROR in closing " + tag.getName() + " ***");
 			}
 		}
+
 	}
 
 	public XMLTag nextTag() throws IOException{
 		return tags.get(1);
+	}
+
+	private void removeLaf(){
+		for(XMLTag tag : tags){
+			if (tag.getName().equals("laf")){
+				this.laf.add(tag);
+			}
+		}
+		tags.removeAll(this.laf);
 	}
 
 	public XMLTag findRoot(){

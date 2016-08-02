@@ -1,8 +1,23 @@
+<laf
+	file=assets/laf/default.xml>
+</laf>
+<laf
+	file=assets/laf/default2.xml>
+</laf>
 <JFrame width=400 height=400>
 	<JPanel layout=FlowLayout>
 		<JLabel setText=Hello height=10 width=10>
 		</JLabel>
-		<JTextField height=20 width=50 setColumns=5 setText=sample>
+		<JTextField
+			height=20
+			width=50
+			setColumns=5
+			setText=sample
+			>
 		</JTextField>
+		<JButton
+			setText=some_text
+			>
+		</JButton>
 	</JPanel>
 </JFrame>

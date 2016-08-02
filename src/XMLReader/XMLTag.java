@@ -18,6 +18,12 @@ public class XMLTag {
 		
 	public String getName(){return this.name;}
 	public List<XMLAttribute> getAttributes(){return this.attributes;}
+	public XMLAttribute getAttributeByName(String name){
+		for (XMLAttribute attr : this.attributes){
+			if (attr.getName().equals(name))return attr;
+		}
+		return null;
+	}
 	public XMLTag getParent(){return this.parent;}
 	public List<XMLTag> getChilderen(){return this.childeren;}
 	

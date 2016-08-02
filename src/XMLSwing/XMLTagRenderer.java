@@ -29,16 +29,9 @@ public class XMLTagRenderer {
 			} catch (ClassNotFoundException e) {				
 				try {
 					type = (Class<? extends Component>) Class.forName(tag.getName());
-				} catch (ClassNotFoundException e1) {
-					switch(tag.getName()){
-						case "laf":
-							Debug.print("Look and Feels detected");
-							break;
-						default:
-							Debug.print("the class " + tag.getName() + " was not found");
-							e.printStackTrace();
-							break;
-					}
+				} catch (ClassNotFoundException e1){
+					Debug.print("the class " + tag.getName() + " was not found");
+					e.printStackTrace();
 				}
 			}
 			obj = XMLTagRenderer.renderComponet(tag, type);

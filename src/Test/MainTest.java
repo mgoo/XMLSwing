@@ -3,7 +3,7 @@ package Test;
 import java.awt.Color;
 import java.io.IOException;
 
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 //import com.alee.laf.WebLookAndFeel;
 
@@ -22,13 +22,15 @@ public class MainTest {
 		XMLReader reader = new XMLReader();
 		try {
 			//WebLookAndFeel.install();
-			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
+			XMLCursor c = reader.openXMLFile("assets/test.xml");
 			c.loadXML();
 			XMLRenderer newRenderer = new XMLRenderer(c);
-			newRenderer.render();
-			newRenderer.setLaf(this.getClass());
+			newRenderer.render(this.getClass());
+			//newRenderer.setLaf();
 			newRenderer.show();
-		} catch (IOException e) {e.printStackTrace();}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) {

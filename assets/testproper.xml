@@ -1,4 +1,6 @@
-<laf>
+<laf
+	file=assets/laf/default.xml
+	>
 </laf>
 <JFrame
 	width=400

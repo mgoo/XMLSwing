@@ -1,10 +1,11 @@
 <synth>
     <style id="basicStyle">
+        <opaque value="TRUE"/>
         <font name="Verdana" size="16"/>
         <state>
-            <color value="BLACK" type="BACKGROUND"/>
-            <color value="WHITE" type="FOREGROUND"/>
+            <color value="#FF0000" type="BACKGROUND"/>
+            <color value="#00FF00" type="FOREGROUND"/>
         </state>
     </style>
-    <bind style="basicStyle" type="region" key=".*"/>
+    <bind style="basicStyle" type="region" key="Label"/>
 </synth>
