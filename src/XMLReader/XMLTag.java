@@ -2,6 +2,8 @@ package XMLReader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import Debug.Debug;
 
@@ -47,15 +49,19 @@ public class XMLTag {
 		data = data.replaceAll("  ", " ");		
 		String[] dataArr = data.split(" ");
 		newTag.setName(dataArr[0]);
-		for (int count = 1; count < dataArr.length; count++){
-			try{
-				newTag.addAttribute(XMLAttribute.makeAttr(dataArr[count]));
-			} catch (ArrayIndexOutOfBoundsException e){/* doesnt add if there is a trailing / */}
+
+		Matcher m = Pattern.compile("([^\\s\"]{0,})=\"(.[^\"]{0,})\"").matcher(data);
+		Debug.print(data);
+		while (m.find()) {
+			newTag.addAttribute(XMLAttribute.makeAttr(m.group()));
 		}
+
 		if (parent != null){
 			newTag.setParent(parent);
 			parent.addChild(newTag);
 		}
+
+
 		return newTag;
 	}
 }

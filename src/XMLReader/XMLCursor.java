@@ -39,12 +39,17 @@ public class XMLCursor {
 					tags.get(count).close();
 				} catch (ArrayIndexOutOfBoundsException e){Debug.print("failed to close: " + line);}
 			} else {
-				int count;
+				int count = -1;
 				try {
 					for (count = tags.size()-1; !tags.get(count).isOpen() && count >= 0; count--){}
-					tags.add(XMLTag.newXMLTag(line, (tags.get(count).isOpen() ? tags.get(count) : null)));
-				} catch (ArrayIndexOutOfBoundsException e){
-					tags.add(XMLTag.newXMLTag(line, null));
+				} catch (ArrayIndexOutOfBoundsException e){}
+				XMLTag newTag = XMLTag.newXMLTag(line, ((count != -1 && tags.get(count).isOpen()) ? tags.get(count) : null));
+				switch (newTag.getName()){
+					case "laf":
+						laf.add(newTag);
+						break;
+					default:
+						tags.add(newTag);
 				}
 			}
 			if (line.endsWith("/")){
@@ -88,10 +93,4 @@ public class XMLCursor {
 		}*/
 		return null;
 	}
-
-	public String nextAttribute(){
-		return "";
-	}
-
-
 }

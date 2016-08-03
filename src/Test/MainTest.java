@@ -22,7 +22,7 @@ public class MainTest {
 		XMLReader reader = new XMLReader();
 		try {
 			//WebLookAndFeel.install();
-			XMLCursor c = reader.openXMLFile("assets/testproper.xml");
+			XMLCursor c = reader.openXMLFile("assets/test.xml");
 			c.loadXML();
 			XMLRenderer newRenderer = new XMLRenderer(c);
 			newRenderer.render(this.getClass());

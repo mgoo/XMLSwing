@@ -91,7 +91,6 @@ public class XMLRenderer {
 		try {
 			for (XMLTag lafTag : this.cursor.getLaf()) {
 				laf.load(new FileInputStream(new File(lafTag.getAttributeByName("file").getValue())), applicatoinClass);
-				Debug.print("Look & Feels: " + lafTag.getAttributeByName("file").getValue());
 			}
 			UIManager.setLookAndFeel(laf);
 			SwingUtilities.updateComponentTreeUI((JFrame)this.root);

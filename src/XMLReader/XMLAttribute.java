@@ -22,11 +22,12 @@ public class XMLAttribute {
 
 
 
-	public static XMLAttribute makeAttr(String data){		
+	public static XMLAttribute makeAttr(String data){
 		XMLAttribute attr = new XMLAttribute();
 		String[] dataArr = data.split("=");
 		attr.setName(dataArr[0]);
-		dataArr[1].replaceAll("/\"/", "");
+		dataArr[1] = dataArr[1].replaceAll("/\"/", "");
+		dataArr[1] = dataArr[1].replaceAll("\"", "");
 		attr.setValue(dataArr[1]);
 		return attr;
 	}
