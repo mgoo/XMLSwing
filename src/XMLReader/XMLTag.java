@@ -56,7 +56,7 @@ public class XMLTag {
 			newTag.addAttribute(XMLAttribute.makeAttr(m.group()));
 		}
 
-		if (parent != null){
+		if (!newTag.getName().equals("laf") && parent != null){
 			newTag.setParent(parent);
 			parent.addChild(newTag);
 		}
